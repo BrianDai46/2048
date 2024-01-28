@@ -11,7 +11,7 @@ def draw_over(screen, font):
 
 
 # take your turn based on direction
-def take_turn(direc, board, score):
+def take_turn(direc, board):
     merged = [[False for _ in range(4)] for _ in range(4)]
     if direc == 'UP':
         for i in range(4):
@@ -27,7 +27,6 @@ def take_turn(direc, board, score):
                     if board[i - shift - 1][j] == board[i - shift][j] and not merged[i - shift][j] \
                             and not merged[i - shift - 1][j]:
                         board[i - shift - 1][j] *= 2
-                        score += board[i - shift - 1][j]
                         board[i - shift][j] = 0
                         merged[i - shift - 1][j] = True
 
@@ -45,7 +44,6 @@ def take_turn(direc, board, score):
                     if board[2 - i + shift][j] == board[3 - i + shift][j] and not merged[3 - i + shift][j] \
                             and not merged[2 - i + shift][j]:
                         board[3 - i + shift][j] *= 2
-                        score += board[3 - i + shift][j]
                         board[2 - i + shift][j] = 0
                         merged[3 - i + shift][j] = True
 
@@ -62,7 +60,6 @@ def take_turn(direc, board, score):
                 if board[i][j - shift] == board[i][j - shift - 1] and not merged[i][j - shift - 1] \
                         and not merged[i][j - shift]:
                     board[i][j - shift - 1] *= 2
-                    score += board[i][j - shift - 1]
                     board[i][j - shift] = 0
                     merged[i][j - shift - 1] = True
 
@@ -80,7 +77,6 @@ def take_turn(direc, board, score):
                     if board[i][4 - j + shift] == board[i][3 - j + shift] and not merged[i][4 - j + shift] \
                             and not merged[i][3 - j + shift]:
                         board[i][4 - j + shift] *= 2
-                        score += board[i][4 - j + shift]
                         board[i][3 - j + shift] = 0
                         merged[i][4 - j + shift] = True
     return board
@@ -95,20 +91,15 @@ def new_pieces(board):
         col = random.randint(0, 3)
         if board[row][col] == 0:
             count += 1
-            if random.randint(1, 10) == 10:
-                board[row][col] = 4
-            else:
-                board[row][col] = 2
+            board[row][col] = 2
     if count < 1:
         full = True
     return board, full
 
 
 # draw background for the board
-def draw_board(screen, font, colors, score):
+def draw_board(screen, font, colors):
     pygame.draw.rect(screen, colors['bg'], [0, 0, 400, 400], 0, 10)
-    score_text = font.render(f'Score: {score}', True, 'black')
-    screen.blit(score_text, (10, 410))
     pass
 
 
@@ -133,3 +124,26 @@ def draw_pieces(board, screen, colors):
                 text_rect = value_text.get_rect(center=(j * 95 + 57, i * 95 + 57))
                 screen.blit(value_text, text_rect)
                 pygame.draw.rect(screen, 'black', [j * 95 + 20, i * 95 + 20, 75, 75], 2, 5)
+     
+
+
+# check if game is over
+def is_game_over(board):
+    for i in range(4):
+        for j in range(3):
+            if board[i][j] == board[i][j + 1]:
+                return False
+    for i in range(3):
+        for j in range(4):
+            if board[i][j] == board[i + 1][j]:
+                return False
+    return True
+
+
+# check if 2024 is on the board
+def check2048(board):
+    for i in range(4):
+        for j in range(4):
+            if board[i][j] == 2048:
+                return True
+    return False

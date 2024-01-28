@@ -5,7 +5,7 @@ pygame.init()
 
 # initial set up
 WIDTH = 400
-HEIGHT = 450
+HEIGHT = 400
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('2048')
 timer = pygame.time.Clock()
@@ -32,29 +32,27 @@ colors = {0: (204, 192, 179),
 
 # game variables initialize
 board_values = [[0 for _ in range(4)] for _ in range(4)]
-game_over = False
+full = False
 spawn_new = True
 init_count = 0
 direction = ''
-global score
-score = 0
 
 # main game loop
 run = True
 while run:
     timer.tick(fps)
     screen.fill('gray')
-    draw_board(screen, font, colors, score)
+    draw_board(screen, font, colors)
     draw_pieces(board_values, screen, colors)
     if spawn_new or init_count < 2:
-        board_values, game_over = new_pieces(board_values)
+        board_values, full = new_pieces(board_values)
         spawn_new = False
         init_count += 1
     if direction != '':
-        board_values = take_turn(direction, board_values, score)
+        board_values = take_turn(direction, board_values)
         direction = ''
         spawn_new = True
-    if game_over:
+    if full and is_game_over(board_values):
         draw_over(screen, font)
 
     for event in pygame.event.get():
@@ -70,14 +68,13 @@ while run:
             elif event.key == pygame.K_d:
                 direction = 'RIGHT'
 
-            if game_over:
+            if full and is_game_over(board_values):
                 if event.key == pygame.K_RETURN:
                     board_values = [[0 for _ in range(4)] for _ in range(4)]
                     spawn_new = True
                     init_count = 0
-                    score = 0
                     direction = ''
-                    game_over = False
+                    full = False
 
     pygame.display.flip()
 pygame.quit()
