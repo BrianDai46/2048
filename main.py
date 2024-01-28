@@ -1,12 +1,11 @@
 from grid_functions import *
 import pygame
-import random
 
 pygame.init()
 
 # initial set up
 WIDTH = 400
-HEIGHT = 500
+HEIGHT = 450
 screen = pygame.display.set_mode([WIDTH, HEIGHT])
 pygame.display.set_caption('2048')
 timer = pygame.time.Clock()
@@ -37,34 +36,26 @@ game_over = False
 spawn_new = True
 init_count = 0
 direction = ''
+global score
 score = 0
-file = open('high_score', 'r')
-init_high = int(file.readline())
-file.close()
-high_score = init_high
 
 # main game loop
 run = True
 while run:
     timer.tick(fps)
     screen.fill('gray')
-    draw_board()
-    draw_pieces(board_values)
+    draw_board(screen, font, colors, score)
+    draw_pieces(board_values, screen, colors)
     if spawn_new or init_count < 2:
         board_values, game_over = new_pieces(board_values)
         spawn_new = False
         init_count += 1
     if direction != '':
-        board_values = take_turn(direction, board_values)
+        board_values = take_turn(direction, board_values, score)
         direction = ''
         spawn_new = True
     if game_over:
-        draw_over()
-        if high_score > init_high:
-            file = open('high_score', 'w')
-            file.write(f'{high_score}')
-            file.close()
-            init_high = high_score
+        draw_over(screen, font)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -87,9 +78,6 @@ while run:
                     score = 0
                     direction = ''
                     game_over = False
-
-    if score > high_score:
-        high_score = score
 
     pygame.display.flip()
 pygame.quit()

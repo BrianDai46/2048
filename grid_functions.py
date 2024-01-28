@@ -1,7 +1,8 @@
 import pygame
+import random
 
 # draw game over and restart text
-def draw_over():
+def draw_over(screen, font):
     pygame.draw.rect(screen, 'black', [50, 50, 300, 100], 0, 10)
     game_over_text1 = font.render('Game Over!', True, 'white')
     game_over_text2 = font.render('Press Enter to Restart', True, 'white')
@@ -10,8 +11,7 @@ def draw_over():
 
 
 # take your turn based on direction
-def take_turn(direc, board):
-    global score
+def take_turn(direc, board, score):
     merged = [[False for _ in range(4)] for _ in range(4)]
     if direc == 'UP':
         for i in range(4):
@@ -105,17 +105,15 @@ def new_pieces(board):
 
 
 # draw background for the board
-def draw_board():
+def draw_board(screen, font, colors, score):
     pygame.draw.rect(screen, colors['bg'], [0, 0, 400, 400], 0, 10)
     score_text = font.render(f'Score: {score}', True, 'black')
-    high_score_text = font.render(f'High Score: {high_score}', True, 'black')
     screen.blit(score_text, (10, 410))
-    screen.blit(high_score_text, (10, 450))
     pass
 
 
 # draw tiles for game
-def draw_pieces(board):
+def draw_pieces(board, screen, colors):
     for i in range(4):
         for j in range(4):
             value = board[i][j]
