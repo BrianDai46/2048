@@ -9,6 +9,15 @@ def draw_over(screen, font):
     screen.blit(game_over_text1, (130, 65))
     screen.blit(game_over_text2, (70, 105))
 
+# draw win and restart text
+def draw_win(screen, font):
+    pygame.draw.rect(screen, 'black', [50, 50, 300, 135], 0, 10)
+    game_win_text1 = font.render('You Win!', True, 'white')
+    game_win_text2 = font.render('Press Enter to Restart', True, 'white')
+    game_win_text3 = font.render('or any key to Exit', True, 'white')
+    screen.blit(game_win_text1, (130, 65))
+    screen.blit(game_win_text2, (70, 105))
+    screen.blit(game_win_text3, (95, 145))
 
 # take your turn based on direction
 def take_turn(direc, board):

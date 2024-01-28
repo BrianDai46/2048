@@ -44,6 +44,8 @@ while run:
     screen.fill('gray')
     draw_board(screen, font, colors)
     draw_pieces(board_values, screen, colors)
+    if check2048(board_values):
+        draw_win(screen, font)
     if spawn_new or init_count < 2:
         board_values, full = new_pieces(board_values)
         spawn_new = False
@@ -76,5 +78,16 @@ while run:
                     direction = ''
                     full = False
 
+            if check2048(board_values):
+                if event.key == pygame.K_RETURN:
+                    board_values = [[0 for _ in range(4)] for _ in range(4)]
+                    spawn_new = True
+                    init_count = 0
+                    direction = ''
+                    full = False
+                else:
+                    run = False
+                    
+            
     pygame.display.flip()
 pygame.quit()
